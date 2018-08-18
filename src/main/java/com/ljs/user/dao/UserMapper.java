@@ -14,4 +14,11 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    /**
+     * Author ljs
+     * Description 根据用户名查找用户
+     * Date 2018/8/17 21:54
+     **/
+    User selectByName(String username);
 }

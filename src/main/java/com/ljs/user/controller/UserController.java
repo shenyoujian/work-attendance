@@ -5,6 +5,9 @@ import com.ljs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @Author ljs
@@ -18,20 +21,28 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/index")
-    public String user(){
-        User user = new User();
-        user.setRealName("ljs");
-        user.setMobile("15622716980");
-        user.setPassword("123");
-        user.setUsername("ljs");
-        User user1 = new User();
-        user1.setId(1L);
-        user1.setRealName("ljs");
-        user1.setMobile("15622716980");
-        user1.setPassword("123");
-        user1.setUsername("ljs");
-        userService.createUser(user, user1);
-        return "user";
+
+    @RequestMapping("/home")
+    public String home(){
+        return "home";
     }
+
+    /**
+     * Author ljs
+     * Description 获取用户信息
+     * Date 2018/8/18 15:02
+     **/
+    @RequestMapping("/userinfo")
+    @ResponseBody
+    public User userInfo(HttpSession session){
+        User user = (User) session.getAttribute("userinfo");
+        return user;
+    }
+
+    @RequestMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "login";
+    }
+
 }

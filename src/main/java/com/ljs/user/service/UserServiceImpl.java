@@ -1,10 +1,13 @@
 package com.ljs.user.service;
 
+import com.ljs.common.utils.SecurityUtils;
 import com.ljs.user.dao.UserMapper;
 import com.ljs.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @Author ljs
@@ -17,12 +20,25 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @Transactional
+    /**
+     * Author ljs
+     * Description 根据用户名查询用户
+     * Date 2018/8/17 21:51
+     **/
     @Override
-    public int createUser(User user, User user1) {
-        userMapper.insertSelective(user);
-        userMapper.insertSelective(user1);
-        return 0;
+    public User findUserByName(String username) {
+        User user = userMapper.selectByName(username);
+        return user;
+    }
 
+    /**
+     * Author ljs
+     * Description 准备用户以供测试登录
+     * Date 2018/8/17 22:06
+     **/
+    @Override
+    public void createUser(User user) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        user.setPassword(SecurityUtils.encrptyPassword(user.getPassword()));
+        userMapper.insertSelective(user);
     }
 }
