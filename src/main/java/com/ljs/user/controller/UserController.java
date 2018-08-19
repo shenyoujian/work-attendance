@@ -39,6 +39,11 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Author ljs
+     * Description 登出系统
+     * Date 2018/8/18 15:58
+     **/
     @RequestMapping("/logout")
     public String logout(HttpSession session){
         session.invalidate();

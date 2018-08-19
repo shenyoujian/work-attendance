@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
  * @Description TODO
  * @Date 2018/8/16 23:17
  **/
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
 
     @Autowired
