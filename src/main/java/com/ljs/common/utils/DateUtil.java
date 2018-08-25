@@ -55,6 +55,7 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        getTodayWeek();
+
+        System.out.println(1^2);
     }
 }

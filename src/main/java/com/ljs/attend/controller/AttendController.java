@@ -5,6 +5,8 @@ import com.ljs.attend.service.AttendService;
 import com.ljs.attend.vo.QueryCondition;
 import com.ljs.common.page.PageQueryBean;
 import com.ljs.user.entity.User;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 
 /**
  * @Author ljs
@@ -24,6 +27,7 @@ public class AttendController {
 
     @Autowired
     private AttendService attendService;
+
 
     @RequestMapping
     public String toAttend() {
@@ -42,10 +46,16 @@ public class AttendController {
         return "succ";
     }
 
+    /**
+     * Author ljs
+     * Description 考勤数据分页查询
+     * Date 2018/8/26 0:23
+     **/
+    @RequiresPermissions("attend:attendList")
     @RequestMapping("/attendList")
     @ResponseBody
     public PageQueryBean listAttend(QueryCondition condition, HttpSession session) {
-        User user = (User) session.getAttribute("userinfo");
+        User user = (User) SecurityUtils.getSubject().getSession().getAttribute("userinfo");
         //获取前端操作条件
         String [] rangeDate = condition.getRangeDate().split("/");
         condition.setStartDate(rangeDate[0]);

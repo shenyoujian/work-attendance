@@ -1,6 +1,6 @@
 package com.ljs.user.service;
 
-import com.ljs.common.utils.SecurityUtils;
+import com.ljs.common.utils.MD5Utils;
 import com.ljs.user.dao.UserMapper;
 import com.ljs.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
  * @Description TODO
  * @Date 2018/8/16 23:17
  **/
-@Service("userServiceImpl")
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
      **/
     @Override
     public void createUser(User user) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        user.setPassword(SecurityUtils.encrptyPassword(user.getPassword()));
+        user.setPassword(MD5Utils.encryptPassword(user.getPassword()));
         userMapper.insertSelective(user);
     }
 }

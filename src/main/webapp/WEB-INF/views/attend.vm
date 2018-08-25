@@ -31,7 +31,7 @@
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">员工在线考勤</span>
+            <span class="logo-lg">员工考勤</span>
         </a>
 
         <!-- Header Navbar -->
@@ -69,7 +69,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">退出系统</a>
+                                    <a href="/user/logout" class="btn btn-default btn-flat">退出系统</a>
                                 </div>
                             </li>
                         </ul>
@@ -96,11 +96,8 @@
                     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                 </div>
             </div>
-
-
             <!-- Sidebar Menu -->
             <ul class="sidebar-menu">
-
                 <!-- Optionally, you can add icons to the links -->
                 <li class="treeview">
                     <a href="#"><i class="fa fa-link"></i> <span>我的考勤</span>
@@ -109,8 +106,9 @@
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="#">打卡记录</a></li>
-                        <li><a href="#">审批记录</a></li>
+                        <li><a href="/attend">打卡记录</a></li>
+                        <li><a href="/reAttend">补签记录</a></li>
+                        <li><a href="/reAttend/list">待办补签</a></li>
                     </ul>
                 </li>
             </ul>
@@ -159,7 +157,7 @@
                         <thead>
                         <tr>
                             <th>序号</th>
-                            <th>userId</th>
+                            <!--<th>userId</th>-->
                             <th>考勤日期</th>
                             <th>星期</th>
                             <th>早打卡</th>
@@ -180,10 +178,69 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+    <!-- 模态框示例（Modal） -->
+    <form method="post" action="/reAttend/start" class="form-horizontal" role="form" id="form_data" onsubmit="return check_form()" style="margin: 20px;">
+        <div class="modal fade" id="reAttendModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            用户信息
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="user_id" class="col-sm-3 control-label">用户ID</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="user_id" name="user_id" value=""
+                                           placeholder="请输入用户ID">
+                                </div>
+                            </div>
 
+                            <div class="form-group">
+                                <label for="lastname" class="col-sm-3 control-label">补签日期</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="user_name" value="" id="user_name"
+                                           placeholder="补签日期">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname" class="col-sm-3 control-label">补签时间</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="address" value="" id="address"
+                                           placeholder="补签时间">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="remark" class="col-sm-3 control-label">补签理由</label>
+                                <div class="col-sm-9">
+                                <textarea  class="form-control"  name="remark" value="" id="remark"
+                                           placeholder="补签理由">
+
+                                </textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            提交
+                        </button><span id="tip"> </span>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </form>
     <!-- Main Footer -->
     <footer class="main-footer">
-        <strong>Copyright &copy; 2016 <a href="#">shenyoujian</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2016 <a href="#">员工在线</a>.</strong> All rights reserved.
     </footer>
 
 </div>
@@ -276,17 +333,11 @@
         language: 'zh-CN',
         todayHighlight: true
     });
-    function del(data) {
-        alert("删除操作");
-    }
-    function update(data) {
-        alert("修改操作");
-    }
 
-    function detail(data) {
-        alert("查看操作");
+    function reAttend(data) {
+        alert(data.id+data.attendDate);
+        $("#reAttendModal").modal('show');
     }
-
 
     var week_CN = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
@@ -383,7 +434,7 @@
                                 return row_col.row;
                             }
                         },
-                        {"data": "userId" , "visible" : false },
+                       <!-- {"data": "userId" , "visible" : false },-->
                         {
                             "data": "attendDate",
                             render: function (data, type, full) {
@@ -397,7 +448,7 @@
                             }
                         },
                         {
-                            "data": "attendMoring",
+                            "data": "attendMorning",
                             render: function (data, type, full) {
                                 if(data!=null){
                                     return new Date(data).format("hh:mm:ss");
@@ -433,9 +484,12 @@
                         {
                             "data": "操作列",
                             render: function (data, type, full) {
-                                return ('<button type="button" class="btn btn-info" onclick="detail(' + full.id + ')">详情</button> ' +
-                                '<button type="button" class="btn btn-warning" onclick="update(' + full.id + ')">修改</button> ' +
-                                '<button type="button" class="btn btn-danger" onclick="del(' + full.id + ')">删除</button>');
+                                if(full.attendStatus==2){
+                                    return  '<button type="button" class="btn btn-info"  onclick="return reAttend('+JSON.stringify(full).replace(/\"/g,"'")+')" >补签</button>'
+                                }else {
+                                    return "";
+                                }
+
                             }
                         }
                     ]

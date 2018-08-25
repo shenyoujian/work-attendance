@@ -19,7 +19,8 @@ public class SessionInterceptor implements HandlerInterceptor {
         //拦截请求到达之前
         String uri = request.getRequestURI();
         //如果url里包含了login就不拦截，包括loginxxx
-        if ((uri.indexOf("login") >= 0) || (uri.indexOf("sign") >= 0)) {
+        if ((uri.indexOf("login") >= 0) || (uri.indexOf("sign") >= 0)
+                || (uri.indexOf("reAttend") >= 0)) {
             return true;
         }
 

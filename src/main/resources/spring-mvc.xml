@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
       http://www.springframework.org/schema/context
       http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
       http://www.springframework.org/schema/mvc
       http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-    <!--包扫描-->
-    <context:component-scan base-package="com.ljs.*.controller">
-    </context:component-scan>
-    <!--处理静态资源-->
-    <mvc:default-servlet-handler/>
+    <!--&lt;!&ndash; 开启shiro的注解支持 &ndash;&gt;-->
+    <!--<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">-->
+        <!--<property name="proxyTargetClass" value="true"/>-->
+    <!--</bean>-->
+    <!--<bean id="defaultAdvisorAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>-->
 
-    <!--配置过滤器-->
-    <mvc:interceptors>
-        <bean class="com.ljs.common.Interceptor.SessionInterceptor"/>
-    </mvc:interceptors>
+
+    <!--开启切面编程自动代理(shiro)很重要，不然识别不了shiro的权限控制注解-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 
     <!--解析前端传来的json-->
     <mvc:annotation-driven>
@@ -35,8 +41,20 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!--包扫描.必须设置，不然已经把service扫描进子容器，就不会产生事务-->
+    <context:component-scan base-package="com.ljs.*.controller">
+    </context:component-scan>
+
     <!--开启注解扫描-->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven />
+
+    <!--处理静态资源-->
+    <mvc:default-servlet-handler/>
+
+    <!--配置过滤器-->
+    <mvc:interceptors>
+        <bean class="com.ljs.common.Interceptor.SessionInterceptor"/>
+    </mvc:interceptors>
 
     <bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath" value="/WEB-INF/views"/>
@@ -51,9 +69,19 @@
         </property>
     </bean>
 
+    <!--当没有访问权限时跳转的页面-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">403</prop>
+            </props>
+        </property>
+    </bean>
+
     <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
         <property name="suffix" value=".vm"/>
         <property name="contentType" value="text/html;charset=utf-8"/>
         <property name="dateToolAttribute" value="date"/><!--日期函数名称-->
     </bean>
+
 </beans>
