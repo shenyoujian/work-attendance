@@ -31,7 +31,7 @@
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">码码考勤</span>
+            <span class="logo-lg">员工考勤</span>
         </a>
 
         <!-- Header Navbar -->
@@ -69,7 +69,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">退出系统</a>
+                                    <a href="/user/logout" class="btn btn-default btn-flat">退出系统</a>
                                 </div>
                             </li>
                         </ul>
@@ -144,13 +144,13 @@
                             <th>操作</th>
                         </tr>
                         </thead>
-                        #foreach( $reAttend in $reAttendList )
+                        #foreach( $task in $tasks )
 
                             <tr><td>$foreach.count</td>
-                                <td>$date.format('yyyy-MM-dd',$reAttend.attendDate)</td>
-                                <td>$date.format('HH:mm:ss',$reAttend.reAttendMor)</td>
-                                <td>$date.format('HH:mm:ss',$reAttend.reAttendEve)</td>
-                                <td>$reAttend.currentHandler</td>
+                                <td>$date.format('yyyy-MM-dd',$task.attendDate)</td>
+                                <td>$date.format('HH:mm:ss',$task.reAttendMor)</td>
+                                <td>$date.format('HH:mm:ss',$task.reAttendEve)</td>
+                                <td>$task.currentHandler</td>
                             </tr>
                         #end
                     </table>

@@ -2,6 +2,7 @@ package com.ljs.user.controller;
 
 import com.ljs.user.entity.User;
 import com.ljs.user.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,8 @@ public class UserController {
     @RequestMapping("/logout")
     public String logout(HttpSession session){
        // session.invalidate();
-        return "login";
+        SecurityUtils.getSubject().getSession().removeAttribute("userinfo");
+        return "redirect:/login";
     }
 
 }

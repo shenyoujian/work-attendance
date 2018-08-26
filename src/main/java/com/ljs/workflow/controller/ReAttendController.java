@@ -62,7 +62,6 @@ public class ReAttendController {
      **/
     @RequiresPermissions("reAttend:list")
     @RequestMapping("/list")
-    @ResponseBody
     public String listReAttendFlow(Model model, HttpSession session) {
         // User user = session.getAttribute("userinfo");
         User user = (User) SecurityUtils.getSubject().getSession().getAttribute("userinfo");

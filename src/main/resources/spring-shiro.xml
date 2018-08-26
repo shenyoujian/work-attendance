@@ -42,7 +42,15 @@
                 /user/userinfo=anon
             </value>
         </property>
+        <!--<property name="filters">-->
+            <!--<map>-->
+                <!--<entry key="logout" value-ref="logoutFilter"/>-->
+            <!--</map>-->
+        <!--</property>-->
     </bean>
+    <!--<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">-->
+        <!--<property name="redirectUrl" value="/login"/>-->
+    <!--</bean>-->
 
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
